@@ -1,0 +1,17 @@
+{
+  "name": "pj-sekai-tweet-api",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "author": "Minotour",
+  "license": "MIT",
+  "dependencies": {
+    "discord.js": "^14.19.3",
+    "dotenv": "^16.5.0",
+    "got": "^14.4.7",
+    "rettiwt-api": "^4.2.0"
+  },
+  "scripts": {
+    "dev": "node src/index.js"
+  },
+  "type": "module"
+}
