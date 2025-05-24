@@ -13,16 +13,6 @@ const webhookClient = new WebhookClient({
 const rettiwt = new Rettiwt({ apiKey: RETTIWT_API_KEY });
 const pj_sekai_id = "1158668053183266816"
 
-rettiwt.user.timeline(pj_sekai_id)
-.then(res => {
-        const tweet = res.list[1]
-        webhookClient.send({
-            content: `[${tweet.retweetedTweet ? ("Retweeted from @" + tweet.retweetedTweet.tweetBy.userName): "New tweet"}](https://x.com/${tweet.tweetBy.id}/status/${tweet.id})`,
-            username: tweet.tweetBy.userName,
-            avatarURL: tweet.tweetBy.profileImage
-            //files: [image]
-        })
-    })
 setInterval(() => {
     rettiwt.user.timeline(pj_sekai_id)
     .then(res => {
@@ -35,11 +25,15 @@ setInterval(() => {
             }
             console.log(`${query_time}: new ${recent_tweets.length} tweets`)
             for (const tweet of recent_tweets.reverse()) {
-                webhookClient.send({
-                    username: tweet.tweetBy.userName,
-                    avatarURL: tweet.tweetBy.profileImage,
-                    content: `[${tweet.retweetedTweet ? ("Retweeted from @" + tweet.retweetedTweet.tweetBy.userName): "New tweet"}](https://x.com/${tweet.tweetBy.id}/status/${tweet.id})`,
-                })
+                try {
+                    webhookClient.send({
+                        username: tweet.tweetBy.userName,
+                        avatarURL: tweet.tweetBy.profileImage,
+                        content: `[${tweet.retweetedTweet ? ("Retweeted @" + tweet.retweetedTweet.tweetBy.userName): "Tweet"}](https://fixupx.com/${tweet.tweetBy.id}/status/${tweet.id})`,
+                    })
+                } catch (err) {
+                    console.error(`Failed to post tweet ${tweet.id} because of ${err.message}`)
+                }
             }
         })
 }, 60_000) // update every 60 seconds
